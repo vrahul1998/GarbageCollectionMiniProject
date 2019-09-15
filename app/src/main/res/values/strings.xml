@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">Garbage Collection</string>
+    <string name="loginbt">LOGIN</string>
+    <string name="notauser">Not A User?</string>
+    <string name="signupbt">SignUp</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="title_activity_home_page">HomePage</string>
+    <string name="tab_text_1">Tab 1</string>
+    <string name="tab_text_2">Tab 2</string>
+    <string name="signuphead">SIGN UP</string>
+    <string name="register">Register</string>
+    <string name="title_activity_bottom_nav_activity">bottom_nav_activity</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="hello_home_fragment">home fragment</string>
+    <string name="hello_history_fragment">history</string>
+</resources>
