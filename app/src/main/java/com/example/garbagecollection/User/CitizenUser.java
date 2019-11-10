@@ -1,4 +1,4 @@
-package com.example.garbagecollection;
+package com.example.garbagecollection.User;
 
 public class CitizenUser {
 String name;

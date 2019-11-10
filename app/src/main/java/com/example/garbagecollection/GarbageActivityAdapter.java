@@ -1,7 +1,6 @@
 package com.example.garbagecollection;
 
 import android.content.Context;
-import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,7 +8,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
@@ -35,7 +33,7 @@ public class GarbageActivityAdapter extends RecyclerView.Adapter<GarbageActivity
     public void onBindViewHolder(@NonNull GarbageViewHolder holder, int position) {
     holder.title.setText(garbageList.get(position).getTitle());
     holder.status.setText(garbageList.get(position).getStatus());
-    holder.location.setText(garbageList.get(position).getLocation());
+    holder.location.setText(Double.toString(garbageList.get(position).getLatitude()));
 //    holder.img.setImageResource(garbageList.get(position).getImg());
     }
 

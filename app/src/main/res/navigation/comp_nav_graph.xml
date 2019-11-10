@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/comp_nav_graph"
+    app:startDestination="@id/companyEmployees">
+
+    <fragment
+        android:id="@+id/companyEmployees"
+        android:name="com.example.garbagecollection.Company.CompanyEmployees"
+        android:label="fragment_company_empolyees"
+        tools:layout="@layout/fragment_company_employees" />
+    <fragment
+        android:id="@+id/compProfile"
+        android:name="com.example.garbagecollection.Company.CompProfile"
+        android:label="fragment_comp_profile"
+        tools:layout="@layout/fragment_comp_profile" />
+</navigation>

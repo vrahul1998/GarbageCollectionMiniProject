@@ -7,17 +7,17 @@
 
     <fragment
         android:id="@+id/userActivities"
-        android:name="com.example.garbagecollection.UserActivities"
+        android:name="com.example.garbagecollection.User.UserActivities"
         android:label="fragment_user_activities"
         tools:layout="@layout/fragment_user_activities" />
     <fragment
         android:id="@+id/history_activity"
-        android:name="com.example.garbagecollection.History_activity"
+        android:name="com.example.garbagecollection.User.HistoryFragment"
         android:label="fragment_history_activity"
         tools:layout="@layout/fragment_history_activity" />
     <fragment
         android:id="@+id/userProfile"
-        android:name="com.example.garbagecollection.UserProfile"
+        android:name="com.example.garbagecollection.User.UserProfile"
         android:label="fragment_user_profile"
         tools:layout="@layout/fragment_user_profile"/>
 </navigation>

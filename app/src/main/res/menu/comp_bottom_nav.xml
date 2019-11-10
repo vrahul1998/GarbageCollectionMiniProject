@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:title="EMPLOYEES"
+        android:icon="@drawable/ic_history_black_24dp"
+        android:id="@+id/companyEmployees"/>
+    <item
+        android:id="@+id/compProfile"
+        android:title="PROFILE"
+        android:icon="@drawable/ic_account_circle_black_24dp"/>
+</menu>

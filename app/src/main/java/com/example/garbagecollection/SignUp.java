@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.icu.text.SimpleDateFormat;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -16,12 +17,13 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.example.garbagecollection.User.CitizenUser;
+import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -87,7 +89,7 @@ public class SignUp extends AppCompatActivity {
             Bitmap imageBitmap = (Bitmap) extras.get("data");
             profilePic.setImageBitmap(imageBitmap);
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            imageBitmap.compress(Bitmap.CompressFormat.JPEG, 60, baos);
             bytesData = baos.toByteArray();
 
             String timeStamp = new SimpleDateFormat("yyMMdd_HHmmss").format(new Date());
@@ -100,33 +102,75 @@ public class SignUp extends AppCompatActivity {
         if(!name.getText().toString().isEmpty() && !age.getText().toString().isEmpty() && !dob.getText().toString().isEmpty() && !phone.getText().toString().isEmpty() && bytesData !=null)
         {
             mRef=mDbase.getReference().child("CitizenUsers");
-            CitizenUser cUser=new CitizenUser(name.getText().toString(),age.getText().toString(),imageFileName,phone.getText().toString(),dob.getText().toString());
+
            try {
 
-               mRef.child(mUser.getUid()).setValue(cUser).addOnCompleteListener(new OnCompleteListener<Void>() {
-                   @Override
-                   public void onComplete(@NonNull Task<Void> task) {
-                       if (task.isSuccessful()) {
-                           Toast.makeText(SignUp.this, "successful", Toast.LENGTH_LONG).show();
-                       } else
-                           Toast.makeText(SignUp.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
-                   }
-               });
+
                mStore = FirebaseStorage.getInstance().getReference();
                profileStore = mStore.child("profilepic").child(imageFileName);
                UploadTask ut = profileStore.putBytes(bytesData);
-               ut.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+               Task<Uri> urlTask =ut.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                    @Override
-                   public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                       Toast.makeText(SignUp.this, "Image Uploaded Successfully", Toast.LENGTH_LONG).show();
+                   public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                       if(!task.isSuccessful())
+                           Toast.makeText(SignUp.this,task.getException().getMessage(),Toast.LENGTH_LONG).show();
+                       return profileStore.getDownloadUrl();
+                   }
+               }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                   @Override
+                   public void onComplete(@NonNull Task<Uri> task) {
+                       Uri uri=task.getResult();
+                       final CitizenUser cUser=new CitizenUser(name.getText().toString(),age.getText().toString(),uri.toString(),
+                               phone.getText().toString(),dob.getText().toString());
+                       mRef.child(mUser.getUid()).setValue(cUser).addOnCompleteListener(new OnCompleteListener<Void>() {
+                           @Override
+                           public void onComplete(@NonNull Task<Void> task) {
+                               if (task.isSuccessful()) {
+                                   Toast.makeText(SignUp.this, "successful", Toast.LENGTH_LONG).show();
+                                   UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                                           .setDisplayName(cUser.getName()).build();
+
+                                   mUser.updateProfile(profileUpdates);
+                                   Intent intent=new Intent(SignUp.this,MainActivity.class);
+                                   intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                   startActivity(intent);
+                                   SignUp.this.finish();
+
+                               } else
+                                   Toast.makeText(SignUp.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                           }
+                       });
                    }
                });
-               ut.addOnFailureListener(new OnFailureListener() {
-                   @Override
-                   public void onFailure(@NonNull Exception e) {
-                       Toast.makeText(SignUp.this, "Failed to upload image", Toast.LENGTH_LONG).show();
-                   }
-               });
+//               ut.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+//                   @Override
+//                   public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+//                       mRef.child(mUser.getUid()).setValue(cUser).addOnCompleteListener(new OnCompleteListener<Void>() {
+//                           @Override
+//                           public void onComplete(@NonNull Task<Void> task) {
+//                               if (task.isSuccessful()) {
+//                                   Toast.makeText(SignUp.this, "successful", Toast.LENGTH_LONG).show();
+//                                   UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+//                                           .setDisplayName(cUser.getName()).build();
+//
+//                                   mUser.updateProfile(profileUpdates);
+//
+//                               } else
+//                                   Toast.makeText(SignUp.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
+//                           }
+//                       });
+//                       Toast.makeText(SignUp.this, "Image Uploaded Successfully", Toast.LENGTH_LONG).show();
+//                       Intent i =new Intent(SignUp.this,MainActivity.class);
+//                       finish();
+//                       startActivity(i);
+//                   }
+//               });
+//               ut.addOnFailureListener(new OnFailureListener() {
+//                   @Override
+//                   public void onFailure(@NonNull Exception e) {
+//                       Toast.makeText(SignUp.this, "Failed to upload image", Toast.LENGTH_LONG).show();
+//                   }
+//               });
            }catch (Exception e){
                Log.d("INFO",e.getMessage());
            }

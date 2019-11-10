@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/emp_nav_graph"
+    app:startDestination="@id/empAvailableActivities">
+
+    <fragment
+        android:id="@+id/empAvailableActivities"
+        android:name="com.example.garbagecollection.Employee.EmpAvailableActivities"
+        android:label="fragment_emp_available_activities"
+        tools:layout="@layout/fragment_emp_available_activities" />
+    <fragment
+        android:id="@+id/empProfile"
+        android:name="com.example.garbagecollection.Employee.EmpProfile"
+        android:label="fragment_emp_profile"
+        tools:layout="@layout/fragment_emp_profile" />
+    <fragment
+        android:id="@+id/empActiveActivity"
+        android:name="com.example.garbagecollection.Employee.EmpActiveActivity"
+        android:label="fragment_emp_active"
+        tools:layout="@layout/fragment_emp_active" />
+</navigation>
